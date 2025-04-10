@@ -44,6 +44,20 @@ Before you can run the app, you'll need to store some environment variables.
 
 Every incoming request is routed to a "listener". Inside this directory, we group each listener based on the Slack Platform feature used, so `/listeners/shortcuts` handles incoming [Shortcuts](https://api.slack.com/interactivity/shortcuts) requests, `/listeners/views` handles [View submissions](https://api.slack.com/reference/interaction-payloads/views#view_submission) and so on.
 
+## Internal Knowledge Base Feature
+
+This app includes a message shortcut that allows users to save important Slack messages to an internal knowledge base. The feature is designed to help teams capture and organize valuable information shared in conversations.
+
+### How It Works
+
+1. Find an important message in any channel
+2. Click the "..." menu (three dots) on the message
+3. Select "Save to Internal KB" from the shortcuts menu
+4. Fill in details like title, category, and tags
+5. Click "Save to KB" to store the information
+
+The app will save the message content along with metadata and send a confirmation with the KB entry details to the user who saved it.
+
 #### Message Shortcuts
 
 This app primarily uses message shortcuts that appear in the message actions menu (three dots menu on a message). Message shortcuts allow users to quickly perform actions on specific messages.

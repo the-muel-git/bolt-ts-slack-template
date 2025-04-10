@@ -1,8 +1,8 @@
 import type { App } from '@slack/bolt';
-import sampleMessageShortcutCallback from './sample-message-shortcut';
+import noteInternalKbCallback from './note-internal-kb';
 
 const register = (app: App) => {
-  app.shortcut('sample_message_shortcut_id', sampleMessageShortcutCallback);
+  app.shortcut('note_internal_kb', noteInternalKbCallback);
 };
 
 export default { register };

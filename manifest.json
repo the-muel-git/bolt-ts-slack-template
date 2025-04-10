@@ -18,10 +18,10 @@
         },
         "shortcuts": [
             {
-                "name": "Process this message",
+                "name": "Save to Internal KB",
                 "type": "message",
-                "callback_id": "sample_message_shortcut_id",
-                "description": "Process the selected message"
+                "callback_id": "note_internal_kb",
+                "description": "Save this message to internal knowledge base"
             }
         ]
     },
