@@ -197,8 +197,7 @@ const noteInternalKbCallback = async ({
                 text: messageText, 
                 author: authorName, 
                 messageUrl 
-              }),
-              disabled: true
+              })
             }
           }
         ],

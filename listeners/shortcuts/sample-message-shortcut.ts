@@ -1,11 +1,11 @@
-import type { AllMiddlewareArgs, SlackShortcutMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, MessageShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 
 const sampleMessageShortcutCallback = async ({
   shortcut,
   ack,
   client,
   logger,
-}: AllMiddlewareArgs & SlackShortcutMiddlewareArgs) => {
+}: AllMiddlewareArgs & SlackShortcutMiddlewareArgs<MessageShortcut>) => {
   try {
     // Acknowledge the shortcut request
     await ack();
@@ -20,7 +20,7 @@ const sampleMessageShortcutCallback = async ({
 
     // Process the message text (in this example, we're just showing it in a modal)
     const messageText = message.text;
-    const channel = shortcut.channel?.id;
+    const channel = shortcut.channel.id;
     const messageTs = message.ts;
 
     // Open a modal to show the message content
