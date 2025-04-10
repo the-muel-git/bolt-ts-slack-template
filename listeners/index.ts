@@ -8,7 +8,8 @@ import views from './views';
 
 const registerListeners = (app: App) => {
   actions.register(app);
-  commands.register(app);
+  // Not using slash commands in this app
+  // commands.register(app);
   events.register(app);
   messages.register(app);
   shortcuts.register(app);

@@ -2,7 +2,7 @@
 
 This is a generic Bolt for JavaScript (TypeScript) template app used to build out Slack apps.
 
-Before getting started, make sure you have a development workspace where you have permissions to install apps. If you don’t have one setup, go ahead and [create one](https://slack.com/create).
+Before getting started, make sure you have a development workspace where you have permissions to install apps. If you don't have one setup, go ahead and [create one](https://slack.com/create).
 
 ## Installation
 
@@ -43,6 +43,10 @@ Before you can run the app, you'll need to store some environment variables.
 ### `/listeners`
 
 Every incoming request is routed to a "listener". Inside this directory, we group each listener based on the Slack Platform feature used, so `/listeners/shortcuts` handles incoming [Shortcuts](https://api.slack.com/interactivity/shortcuts) requests, `/listeners/views` handles [View submissions](https://api.slack.com/reference/interaction-payloads/views#view_submission) and so on.
+
+#### Message Shortcuts
+
+This app primarily uses message shortcuts that appear in the message actions menu (three dots menu on a message). Message shortcuts allow users to quickly perform actions on specific messages.
 
 ## App Distribution / OAuth
 

@@ -18,17 +18,10 @@
         },
         "shortcuts": [
             {
-                "name": "Run sample shortcut",
-                "type": "global",
-                "callback_id": "sample_shortcut_id",
-                "description": "Runs a sample shortcut"
-            }
-        ],
-        "slash_commands": [
-            {
-                "command": "/sample-command",
-                "description": "Runs a sample command",
-                "should_escape": false
+                "name": "Process this message",
+                "type": "message",
+                "callback_id": "sample_message_shortcut_id",
+                "description": "Process the selected message"
             }
         ]
     },
@@ -36,8 +29,7 @@
         "scopes": {
             "bot": [
                 "channels:history",
-                "chat:write",
-                "commands"
+                "chat:write"
             ]
         }
     },
