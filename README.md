@@ -85,3 +85,17 @@ Navigate to **OAuth & Permissions** in your app configuration and click **Add a 
 ```
 https://3cb89939.ngrok.io/slack/oauth_redirect
 ```
+
+## Deployment
+
+This app is deployed on Railway at https://bolt-ts-slack-template-production.up.railway.app/.
+
+For Slack event subscriptions and interactivity, the app uses the following endpoints:
+- Events URL: https://bolt-ts-slack-template-production.up.railway.app/slack/events
+- Interactivity Request URL: https://bolt-ts-slack-template-production.up.railway.app/slack/events
+
+To set up your own deployment:
+1. Create a Railway account and project
+2. Connect your GitHub repository
+3. Set up the required environment variables in Railway
+4. Configure the URLs in your Slack app settings in the Slack API dashboard
