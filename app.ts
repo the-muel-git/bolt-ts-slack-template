@@ -10,16 +10,22 @@ const receiver = new ExpressReceiver({
   processBeforeResponse: true,
 });
 
-// Add middleware to handle URL verification challenge
-receiver.router.post('/slack/events', (req, res, next) => {
+// Define handleEventTypeURLVerification outside of the middleware to avoid TypeScript errors
+const handleEventTypeURLVerification = (req: any, res: any) => {
   // Special handling for URL verification challenge
   if (req.body && req.body.type === 'url_verification') {
     console.log('Received URL verification challenge:', req.body.challenge);
     // Return exactly what Slack expects for verification
     return res.json({ challenge: req.body.challenge });
   }
-  
-  // For other requests, continue with normal Bolt handling
+  return false;
+};
+
+// Add middleware to handle URL verification challenge
+receiver.router.use('/slack/events', (req, res, next) => {
+  if (handleEventTypeURLVerification(req, res)) {
+    return; // URL verification was handled
+  }
   next();
 });
 
@@ -28,7 +34,7 @@ const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
   receiver,
-  socketMode: false, // Explicitly disable Socket Mode
+  socketMode: false, // EXPLICITLY disabling Socket Mode
   logLevel: LogLevel.DEBUG,
 });
 
@@ -38,9 +44,11 @@ registerListeners(app);
 /** Start Bolt App */
 (async () => {
   try {
+    console.log('Starting app in HTTP MODE - NOT Socket Mode');
+    console.log('socketMode is EXPLICITLY set to FALSE');
     await app.start(process.env.PORT || 3000);
     app.logger.info('⚡️ Bolt app is running! ⚡️');
-    app.logger.info('URL verification handler is active at: /slack/events');
+    app.logger.info('HTTP mode is active, URL verification handler is at: /slack/events');
   } catch (error) {
     app.logger.error('Unable to start App', error);
   }
