@@ -34,7 +34,6 @@
                 "channels:join",
                 "commands",
                 "reactions:read",
-                "app_mentions:read",
                 "links:read"
             ]
         }
@@ -44,7 +43,6 @@
             "bot_events": [
                 "app_home_opened",
                 "message.channels",
-                "app_mention",
                 "link_shared"
             ]
         },
