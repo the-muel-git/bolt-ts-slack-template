@@ -99,3 +99,128 @@ To set up your own deployment:
 2. Connect your GitHub repository
 3. Set up the required environment variables in Railway
 4. Configure the URLs in your Slack app settings in the Slack API dashboard
+
+## Slack App Configuration
+
+After deploying your app to Railway (or another hosting provider), you'll need to configure several settings in the Slack API dashboard:
+
+### Basic Information
+1. Navigate to [Your Apps](https://api.slack.com/apps) and select your app
+2. Under "Basic Information", verify your app's name, description, and icon
+
+### App Credentials
+1. Under "Basic Information", note the "Signing Secret" - you'll need this for your `SLACK_SIGNING_SECRET` environment variable
+2. If not already done, set up the required environment variables in Railway:
+   - `SLACK_BOT_TOKEN`: Your bot's OAuth token
+   - `SLACK_SIGNING_SECRET`: Your app's signing secret
+   - `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`: Only needed if using OAuth installation flow
+
+### Interactivity & Shortcuts
+1. In the left sidebar, click "Interactivity & Shortcuts"
+2. Toggle "Interactivity" to On
+3. Set the Request URL to: `https://bolt-ts-slack-template-production.up.railway.app/slack/events`
+4. Under "Shortcuts", verify that your message shortcut is configured:
+   - Name: "Save to Internal KB"
+   - Short Description: "Save this message to internal knowledge base"
+   - Callback ID: "note_internal_kb"
+   - Type: Message
+
+### Event Subscriptions
+1. In the left sidebar, click "Event Subscriptions"
+2. Toggle "Enable Events" to On
+3. Set the Request URL to: `https://bolt-ts-slack-template-production.up.railway.app/slack/events`
+4. Under "Subscribe to bot events", verify that the following events are subscribed:
+   - `app_home_opened`
+   - `message.channels`
+5. Click "Save Changes"
+
+### OAuth & Permissions
+1. In the left sidebar, click "OAuth & Permissions"
+2. Under "Redirect URLs", add your app's OAuth redirect URL if using the OAuth flow
+3. Under "Bot Token Scopes", verify that the following scopes are enabled:
+   - `channels:history`
+   - `chat:write`
+   - `connections:write`
+   - `channels:join`
+   - `commands`
+   - `reactions:read`
+4. If you need to reinstall your app, click "Install to Workspace" to get a new Bot Token
+
+### App Home
+1. In the left sidebar, click "App Home"
+2. Toggle "Home Tab" to On
+3. Toggle "Messages Tab" based on your preference
+4. Make sure "Allow users to send Slash commands and messages from the messages tab" is set according to your needs
+
+After completing these configurations, your Slack app should be fully functional and ready to use with your Railway deployment.
+
+## Handling Events API URL Verification
+
+When configuring the Events API in your Slack app, Slack sends a verification request to your Request URL to confirm that your server can respond properly. This is called the URL Verification challenge.
+
+If you're having trouble with URL verification, you can use one of these approaches:
+
+### Option 1: Use the Standalone Verification Server
+
+For the initial URL verification, you can deploy the standalone verification handler:
+
+1. Deploy `url-verification-handler.ts` to Railway
+2. Configure your Slack app's Events Request URL to point to your Railway deployment
+3. Once verified, switch to your main app
+
+```bash
+# Install dependencies
+npm install express body-parser @types/express
+
+# Compile and run
+npx tsc url-verification-handler.ts
+node url-verification-handler.js
+```
+
+### Option 2: Modify app.ts to Handle Verification
+
+If you prefer to modify your main app, you can use `ExpressReceiver` to handle the verification:
+
+```typescript
+import { App, LogLevel, ExpressReceiver } from '@slack/bolt';
+
+// Create a custom receiver
+const receiver = new ExpressReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET || '',
+  processBeforeResponse: true,
+});
+
+// Handle URL verification challenge
+receiver.router.post('/slack/events', (req, res, next) => {
+  if (req.body && req.body.type === 'url_verification') {
+    return res.json({ challenge: req.body.challenge });
+  }
+  next();
+});
+
+const app = new App({
+  token: process.env.SLACK_BOT_TOKEN,
+  receiver,
+  // other options...
+});
+```
+
+### Verification Request Format
+
+The URL verification request from Slack looks like this:
+
+```json
+{
+  "token": "Jhj5dZrVaK7ZwHHjRyZWjbDl",
+  "challenge": "3eZbrw1aBm2rZgRNFdxV2595E9CY3gmdALWMmHkvFXO7tYXAYM8P",
+  "type": "url_verification"
+}
+```
+
+Your server needs to respond with:
+
+```json
+{ "challenge": "3eZbrw1aBm2rZgRNFdxV2595E9CY3gmdALWMmHkvFXO7tYXAYM8P" }
+```
+
+For more details, see the [Slack Events API documentation](https://api.slack.com/events/url_verification).
