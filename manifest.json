@@ -33,7 +33,9 @@
                 "connections:write",
                 "channels:join",
                 "commands",
-                "reactions:read"
+                "reactions:read",
+                "app_mentions:read",
+                "links:read"
             ]
         }
     },
@@ -41,7 +43,9 @@
         "event_subscriptions": {
             "bot_events": [
                 "app_home_opened",
-                "message.channels"
+                "message.channels",
+                "app_mention",
+                "link_shared"
             ]
         },
         "interactivity": {
