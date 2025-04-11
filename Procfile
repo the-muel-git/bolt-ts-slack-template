@@ -1,1 +1,1 @@
-web: npm run build && node ./dist/app-http.js 
+web: npm run build && node start.js 

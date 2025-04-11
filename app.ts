@@ -1,16 +1,35 @@
-import { App, LogLevel } from '@slack/bolt';
+import { App, LogLevel, ExpressReceiver } from '@slack/bolt';
 import * as dotenv from 'dotenv';
 import registerListeners from './listeners';
 
 dotenv.config();
 
+// Create a custom ExpressReceiver for handling verification
+const receiver = new ExpressReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET || '',
+  processBeforeResponse: true,
+});
+
+// Add middleware to handle URL verification challenge
+receiver.router.post('/slack/events', (req, res, next) => {
+  // Special handling for URL verification challenge
+  if (req.body && req.body.type === 'url_verification') {
+    console.log('Received URL verification challenge:', req.body.challenge);
+    // Return exactly what Slack expects for verification
+    return res.json({ challenge: req.body.challenge });
+  }
+  
+  // For other requests, continue with normal Bolt handling
+  next();
+});
+
 /** Initialization */
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
+  receiver,
+  socketMode: false, // Explicitly disable Socket Mode
   logLevel: LogLevel.DEBUG,
-  // Use the default endpoints (/slack/events)
-  // Railway will route traffic to https://bolt-ts-slack-template-production.up.railway.app/slack/events
 });
 
 /** Register Listeners */
@@ -21,7 +40,7 @@ registerListeners(app);
   try {
     await app.start(process.env.PORT || 3000);
     app.logger.info('⚡️ Bolt app is running! ⚡️');
-    app.logger.info('Listening for events at: /slack/events');
+    app.logger.info('URL verification handler is active at: /slack/events');
   } catch (error) {
     app.logger.error('Unable to start App', error);
   }

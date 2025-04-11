@@ -2,10 +2,10 @@
   "name": "bolt-ts-starter-template",
   "version": "1.0.0",
   "description": "A scaffold template for Slack apps",
-  "main": "dist/app.js",
+  "main": "dist/app-http.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node ./dist/app.js",
+    "start": "npm run build && node ./dist/app-http.js",
     "lint": "npx @biomejs/biome check *.ts listeners",
     "lint:fix": "npx @biomejs/biome check --write *.ts listeners",
     "test": "npm run build && npm run lint"
