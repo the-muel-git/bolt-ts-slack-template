@@ -12,7 +12,7 @@ const noteInternalKbCallback = async ({
 
     // Get the message that the shortcut was triggered on
     const message = shortcut.message;
-    
+
     if (!message || !message.text) {
       logger.error('No message content found');
       return;
@@ -23,16 +23,16 @@ const noteInternalKbCallback = async ({
     const channel = shortcut.channel.id;
     const messageTs = message.ts;
     const messageUrl = `https://slack.com/archives/${channel}/p${messageTs.replace('.', '')}`;
-    
+
     // Get user info of message author
-    let authorName = "Unknown User";
+    let authorName = 'Unknown User';
     try {
       if (message.user) {
         const userResult = await client.users.info({
-          user: message.user
+          user: message.user,
         });
         if (userResult.user) {
-          authorName = userResult.user.real_name || userResult.user.name || "Unknown User";
+          authorName = userResult.user.real_name || userResult.user.name || 'Unknown User';
         }
       }
     } catch (userError) {
@@ -55,17 +55,17 @@ const noteInternalKbCallback = async ({
             text: {
               type: 'mrkdwn',
               text: '*Original Message:*',
-            }
+            },
           },
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
               text: `${messageText.substring(0, 2900)}${messageText.length > 2900 ? '...' : ''}`,
-            }
+            },
           },
           {
-            type: 'divider'
+            type: 'divider',
           },
           {
             type: 'input',
@@ -79,9 +79,9 @@ const noteInternalKbCallback = async ({
               action_id: 'title',
               placeholder: {
                 type: 'plain_text',
-                text: 'Enter a title for this knowledge base entry'
-              }
-            }
+                text: 'Enter a title for this knowledge base entry',
+              },
+            },
           },
           {
             type: 'input',
@@ -95,46 +95,46 @@ const noteInternalKbCallback = async ({
               action_id: 'category',
               placeholder: {
                 type: 'plain_text',
-                text: 'Select a category'
+                text: 'Select a category',
               },
               options: [
                 {
                   text: {
                     type: 'plain_text',
-                    text: 'Product'
+                    text: 'Product',
                   },
-                  value: 'product'
+                  value: 'product',
                 },
                 {
                   text: {
                     type: 'plain_text',
-                    text: 'Technical'
+                    text: 'Technical',
                   },
-                  value: 'technical'
+                  value: 'technical',
                 },
                 {
                   text: {
                     type: 'plain_text',
-                    text: 'Process'
+                    text: 'Process',
                   },
-                  value: 'process'
+                  value: 'process',
                 },
                 {
                   text: {
                     type: 'plain_text',
-                    text: 'Customer'
+                    text: 'Customer',
                   },
-                  value: 'customer'
+                  value: 'customer',
                 },
                 {
                   text: {
                     type: 'plain_text',
-                    text: 'Other'
+                    text: 'Other',
                   },
-                  value: 'other'
-                }
-              ]
-            }
+                  value: 'other',
+                },
+              ],
+            },
           },
           {
             type: 'input',
@@ -149,9 +149,9 @@ const noteInternalKbCallback = async ({
               action_id: 'tags',
               placeholder: {
                 type: 'plain_text',
-                text: 'Enter comma-separated tags'
-              }
-            }
+                text: 'Enter comma-separated tags',
+              },
+            },
           },
           {
             type: 'input',
@@ -167,18 +167,18 @@ const noteInternalKbCallback = async ({
               multiline: true,
               placeholder: {
                 type: 'plain_text',
-                text: 'Add any additional context or notes'
-              }
-            }
+                text: 'Add any additional context or notes',
+              },
+            },
           },
           {
             type: 'context',
             elements: [
               {
                 type: 'mrkdwn',
-                text: `Original message from *${authorName}* | <${messageUrl}|View in Slack>`
-              }
-            ]
+                text: `Original message from *${authorName}* | <${messageUrl}|View in Slack>`,
+              },
+            ],
           },
           {
             type: 'input',
@@ -191,15 +191,15 @@ const noteInternalKbCallback = async ({
             element: {
               type: 'plain_text_input',
               action_id: 'message_ref',
-              initial_value: JSON.stringify({ 
-                channel, 
-                messageTs, 
-                text: messageText, 
-                author: authorName, 
-                messageUrl 
-              })
-            }
-          }
+              initial_value: JSON.stringify({
+                channel,
+                messageTs,
+                text: messageText,
+                author: authorName,
+                messageUrl,
+              }),
+            },
+          },
         ],
         submit: {
           type: 'plain_text',
@@ -208,12 +208,12 @@ const noteInternalKbCallback = async ({
         close: {
           type: 'plain_text',
           text: 'Cancel',
-        }
-      }
+        },
+      },
     });
   } catch (error) {
     logger.error('Error processing knowledge base shortcut:', error);
   }
 };
 
-export default noteInternalKbCallback; 
+export default noteInternalKbCallback;

@@ -1,5 +1,6 @@
-import { App, LogLevel, ExpressReceiver } from '@slack/bolt';
+import { App, ExpressReceiver, LogLevel } from '@slack/bolt';
 import * as dotenv from 'dotenv';
+import type { NextFunction, Request, Response } from 'express';
 import registerListeners from './listeners';
 
 dotenv.config();
@@ -11,14 +12,14 @@ const receiver = new ExpressReceiver({
 });
 
 // Add middleware to handle URL verification challenge
-receiver.router.post('/slack/events', (req, res, next) => {
+receiver.router.post('/slack/events', (req: Request, res: Response, next: NextFunction) => {
   // Special handling for URL verification challenge
   if (req.body && req.body.type === 'url_verification') {
     console.log('Received URL verification challenge:', req.body.challenge);
     // Return exactly what Slack expects for verification
-    return res.json({ challenge: req.body.challenge });
+    res.json({ challenge: req.body.challenge });
   }
-  
+
   // For other requests, continue with normal Bolt handling
   next();
 });
@@ -44,4 +45,4 @@ registerListeners(app);
   } catch (error) {
     app.logger.error('Unable to start App', error);
   }
-})(); 
+})();
