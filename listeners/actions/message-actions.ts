@@ -1,4 +1,4 @@
-import type { AllMiddlewareArgs, SlackActionMiddlewareArgs, BlockAction } from '@slack/bolt';
+import type { AllMiddlewareArgs, BlockAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 
 // Simplified handlers to be fully implemented later
 export const addReactionHandler = async ({
@@ -21,4 +21,4 @@ export const replyToMessageHandler = async ({
   await ack();
   logger.info('Reply to message action triggered');
   // Implementation will be added once we fix TypeScript issues
-}; 
+};

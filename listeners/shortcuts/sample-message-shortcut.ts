@@ -12,7 +12,7 @@ const sampleMessageShortcutCallback = async ({
 
     // Get the message that the shortcut was triggered on
     const message = shortcut.message;
-    
+
     if (!message || !message.text) {
       logger.error('No message content found');
       return;
@@ -39,21 +39,21 @@ const sampleMessageShortcutCallback = async ({
             text: {
               type: 'mrkdwn',
               text: '*Message content:*',
-            }
+            },
           },
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
               text: `${messageText}`,
-            }
+            },
           },
           {
             type: 'section',
             text: {
               type: 'mrkdwn',
               text: '*Would you like to take action on this message?*',
-            }
+            },
           },
           {
             type: 'actions',
@@ -67,7 +67,7 @@ const sampleMessageShortcutCallback = async ({
                 },
                 action_id: 'add_reaction',
                 value: JSON.stringify({ channel, messageTs }),
-                style: 'primary'
+                style: 'primary',
               },
               {
                 type: 'button',
@@ -77,19 +77,19 @@ const sampleMessageShortcutCallback = async ({
                 },
                 action_id: 'reply_to_message',
                 value: JSON.stringify({ channel, messageTs }),
-              }
-            ]
-          }
+              },
+            ],
+          },
         ],
         close: {
           type: 'plain_text',
           text: 'Close',
-        }
-      }
+        },
+      },
     });
   } catch (error) {
     logger.error('Error processing message shortcut:', error);
   }
 };
 
-export default sampleMessageShortcutCallback; 
+export default sampleMessageShortcutCallback;

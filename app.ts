@@ -1,5 +1,6 @@
-import { App, LogLevel, ExpressReceiver } from '@slack/bolt';
+import { App, ExpressReceiver, LogLevel } from '@slack/bolt';
 import * as dotenv from 'dotenv';
+import type { Request, Response } from 'express';
 import registerListeners from './listeners';
 
 dotenv.config();
@@ -11,12 +12,13 @@ const receiver = new ExpressReceiver({
 });
 
 // Define handleEventTypeURLVerification outside of the middleware to avoid TypeScript errors
-const handleEventTypeURLVerification = (req: any, res: any) => {
+const handleEventTypeURLVerification = (req: Request, res: Response): boolean => {
   // Special handling for URL verification challenge
   if (req.body && req.body.type === 'url_verification') {
     console.log('Received URL verification challenge:', req.body.challenge);
     // Return exactly what Slack expects for verification
-    return res.json({ challenge: req.body.challenge });
+    res.json({ challenge: req.body.challenge });
+    return true;
   }
   return false;
 };
